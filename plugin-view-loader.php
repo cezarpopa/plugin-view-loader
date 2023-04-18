@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Plugin Name: View Load
+ * Plugin Name: Plugin View Loader
  * Plugin URI: https://github.com/cezarpopa/plugin-view-loader/
  * Description: Untested attempt at creating a mu-plugin to use in WordPress plugins to load partial templates.
  * Author: Cezar Popa
