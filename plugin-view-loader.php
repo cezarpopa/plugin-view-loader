@@ -43,7 +43,7 @@ function get_plugin_part(
 
     $templates[] = "{$slug}.php";
 
-    return get_plugin_partial_path($templates, true, $args);
+    return get_plugin_partial_view($templates, true, $args);
 }
 
 /**
@@ -53,7 +53,7 @@ function get_plugin_part(
  *
  * @return string
  */
-function get_plugin_partial_path(
+function get_plugin_partial_view(
     array $templateNames,
     bool $requireOnce = true,
     array $args = []
