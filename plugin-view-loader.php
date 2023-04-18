@@ -61,7 +61,7 @@ function get_plugin_partial_view(
     $located = '';
 
     foreach ($templateNames as $templateName) {
-        if ( ! $templateName) {
+        if (!$templateName) {
             continue;
         }
 
