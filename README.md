@@ -57,7 +57,7 @@ Use this function to load a partial template.
 
 * (string): The HTML output of the loaded partial template.
 
-**get_plugin_partial_path()**
+**get_plugin_partial_view()**
 
 ```php
 /**
@@ -73,7 +73,7 @@ Use this function to load a partial template.
   array $args = []
   ): string
 ```
-Use this function to get the path to a partial template.
+Use this function to get the template a string.
 
 #### Parameters
 
