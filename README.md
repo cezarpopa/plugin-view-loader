@@ -25,7 +25,9 @@ get_plugin_part(
 ); 
 ```
 
-The first argument is the path to your partial template and must include the plugin name. This should be relative to your plugin directory. The second argument is the name of the partial template file (without the .php extension). Finally, the third argument is an array of arguments that you can pass to the template.
+The first argument is the path to your partial template and must include the plugin name. This should be relative to your plugin directory. 
+
+The second argument is the name of the partial template file (without the .php extension). Finally, the third argument is an array of arguments that you can pass to the template.
 
 ### Function Reference
 
