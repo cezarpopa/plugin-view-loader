@@ -17,6 +17,7 @@ if ( ! function_exists('add_action')) {
 
 /**
  * @see     https://developer.wordpress.org/reference/functions/get_template_part/
+ * @see     https://developer.wordpress.org/reference/functions/locate_template/
  * @example get_plugin_part('your-plugin-name/path-to-view/slug', 'name', ['foo' => 'bar']);
  *
  * @param string      $slug
@@ -89,6 +90,7 @@ function get_plugin_part(
 }
 
 /**
+ * @see   https://developer.wordpress.org/reference/functions/get_template_part/
  * @param string $_template_file
  * @param bool   $require_once
  * @param array  $args
