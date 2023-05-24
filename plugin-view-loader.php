@@ -34,56 +34,113 @@ function get_plugin_part(
         return '';
     }
 
-    do_action("get_plugin_part_{$slug}", $slug, $name, $args);
-
     $templates = [];
     if (isset($name)) {
         $templates[] = "{$slug}-{$name}.php";
     }
 
-    $templates[] = "{$slug}.php";
+    $templates[] = "{$name}.php";
 
-    return get_plugin_partial_view($templates, true, $args);
-}
+    /**
+     * Fires before an attempt is made to locate and load a plugin part.
+     *
+     * @param string   $slug      The slug name for the generic template.
+     * @param string   $name      The name of the specialized template.
+     * @param string[] $templates Array of template files to search for, in order.
+     * @param array    $args      Additional arguments passed to the template.
+     *
+     * @since 5.2.0
+     * @since 5.5.0 The `$args` parameter was added.
+     *
+     */
+    do_action("get_plugin_part{$slug}", $slug, $name, $args);
 
-/**
- * @param array $templateNames
- * @param bool  $requireOnce
- * @param array $args
- *
- * @return string
- */
-function get_plugin_partial_view(
-    array $templateNames,
-    bool $requireOnce = true,
-    array $args = []
-): string {
     $located = '';
 
-    foreach ($templateNames as $templateName) {
-        if (!$templateName) {
+    foreach ($templates as $template_name) {
+        if ( ! $template_name) {
             continue;
         }
 
-        $filePath = plugin_dir_path(__DIR__) . $templateName;
+        if (file_exists(WP_PLUGIN_DIR . $template_name)) {
+            $located = WP_PLUGIN_DIR . $template_name;
+            break;
+        }
 
-        if (file_exists($filePath)) {
-            $located = $filePath;
+        if (file_exists(WPMU_PLUGIN_DIR . $template_name)) {
+            $located = WPMU_PLUGIN_DIR . $template_name;
             break;
         }
     }
 
-    if ($located !== '') {
-        ob_start();
-
+    if ( !empty($located)) {
         try {
-            load_template($located, $requireOnce, $args);
+            ob_start();
+
+            get_plugin_partial_view($located, true, $args);
+
+            return ob_get_clean();
         } catch (Exception $e) {
             return $e->getMessage();
         }
-
-        return ob_get_clean();
     }
 
     return $located;
+}
+
+/**
+ * @param string $_template_file
+ * @param bool   $require_once
+ * @param array  $args
+ *
+ * @return string
+ */
+function get_plugin_partial_view(string $_template_file, bool $require_once = true, array $args = []): string
+{
+    global $posts, $post, $wp_did_header, $wp_query, $wp_rewrite, $wpdb, $wp_version, $wp, $id, $comment, $user_ID;
+
+    if (is_array($wp_query->query_vars)) {
+        /*
+         * This use of extract() cannot be removed. There are many possible ways that
+         * templates could depend on variables that it creates existing, and no way to
+         * detect and deprecate it.
+         *
+         * Passing the EXTR_SKIP flag is the safest option, ensuring globals and
+         * function variables cannot be overwritten.
+         */
+        // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+        extract($wp_query->query_vars, EXTR_SKIP);
+    }
+
+    if (isset($s)) {
+        $s = esc_attr($s);
+    }
+
+    /**
+     * Fires before a template file is loaded.
+     *
+     * @param string $_template_file The full path to the template file.
+     * @param bool   $require_once   Whether to require_once or require.
+     * @param array  $args           Additional arguments passed to the template.
+     *
+     * @since 6.1.0
+     *
+     */
+    do_action('wp_before_load_template', $_template_file, $require_once, $args);
+
+    $templateFile = require $_template_file;
+
+    /**
+     * Fires after a template file is loaded.
+     *
+     * @param string $_template_file The full path to the template file.
+     * @param bool   $require_once   Whether to require_once or require.
+     * @param array  $args           Additional arguments passed to the template.
+     *
+     * @since 6.1.0
+     *
+     */
+    do_action('wp_after_load_template', $_template_file, $require_once, $args);
+
+    return $templateFile;
 }
