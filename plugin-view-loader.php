@@ -40,7 +40,7 @@ function get_plugin_part(
         $templates[] = "{$slug}-{$name}.php";
     }
 
-    $templates[] = "{$name}.php";
+    $templates[] = "{$slug}.php";
 
     /**
      * Fires before an attempt is made to locate and load a plugin part.
